@@ -358,26 +358,6 @@ int NpcFunctions::luaNpcOpenShopWindow(lua_State* L) {
 	return 1;
 }
 
-int NpcFunctions::luaNpcOpenShopWindowCustom(lua_State* L) {
-	// npc:openShopWindow(player)
-	std::shared_ptr<Npc> npc = getUserdataShared<Npc>(L, 1);
-	if (!npc) {
-		reportErrorFunc(getErrorDesc(LUA_ERROR_NPC_NOT_FOUND));
-		pushBoolean(L, false);
-		return 1;
-	}
-
-	std::shared_ptr<Player> player = getPlayer(L, 2);
-	if (!player) {
-		reportErrorFunc(getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
-		pushBoolean(L, false);
-		return 1;
-	}
-
-	pushBoolean(L, player->openShopWindowCustom(npc));
-	return 1;
-}
-
 int NpcFunctions::luaNpcCloseShopWindow(lua_State* L) {
 	// npc:closeShopWindow(player)
 	const auto &player = getPlayer(L, 2);

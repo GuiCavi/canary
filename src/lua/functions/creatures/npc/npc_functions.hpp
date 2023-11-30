@@ -36,7 +36,6 @@ private:
 		registerMethod(L, "Npc", "isInTalkRange", NpcFunctions::luaNpcIsInTalkRange);
 		registerMethod(L, "Npc", "isPlayerInteractingOnTopic", NpcFunctions::luaNpcIsPlayerInteractingOnTopic);
 		registerMethod(L, "Npc", "openShopWindow", NpcFunctions::luaNpcOpenShopWindow);
-		registerMethod(L, "Npc", "openShopWindowCustom", NpcFunctions::luaNpcOpenShopWindowCustom);
 		registerMethod(L, "Npc", "closeShopWindow", NpcFunctions::luaNpcCloseShopWindow);
 		registerMethod(L, "Npc", "getShopItem", NpcFunctions::luaNpcGetShopItem);
 		registerMethod(L, "Npc", "isMerchant", NpcFunctions::luaNpcIsMerchant);
@@ -74,7 +73,6 @@ private:
 	static int luaNpcIsInTalkRange(lua_State* L);
 	static int luaNpcIsPlayerInteractingOnTopic(lua_State* L);
 	static int luaNpcOpenShopWindow(lua_State* L);
-	static int luaNpcOpenShopWindowCustom(lua_State* L);
 	static int luaNpcCloseShopWindow(lua_State* L);
 	static int luaNpcGetShopItem(lua_State* L);
 	static int luaNpcIsMerchant(lua_State* L);

@@ -48,6 +48,7 @@ if NpcHandler == nil then
 	CALLBACK_SET_INTERACTION = 18
 	CALLBACK_REMOVE_INTERACTION = 19
 	CALLBACK_ON_TRADE_REQUEST = 20
+	CALLBACK_ON_MOVE_AWAY = 21
 
 	-- Addidional module callback ids
 	CALLBACK_MODULE_INIT = 12
@@ -316,6 +317,8 @@ if NpcHandler == nil then
 				tmpRet = module:callbackOnMessageDefault(...)
 			elseif id == CALLBACK_MODULE_RESET and module.callbackOnModuleReset ~= nil then
 				tmpRet = module:callbackOnModuleReset(...)
+			elseif id == CALLBACK_ON_MOVE_AWAY and module.callbackOnMoveAway ~= nil then
+				tmpRet = module:callbackOnMoveAway(...)
 			end
 			if not tmpRet then
 				ret = false
@@ -501,6 +504,12 @@ if NpcHandler == nil then
 				if self:checkInteraction(npc, player) then
 					if not self:isInRange(npc, player) then
 						self:onWalkAway(npc, player)
+						local moveAwayCallback = self:getCallback(CALLBACK_ON_MOVE_AWAY)
+						if moveAwayCallback == nil or moveAwayCallback(npc, player) then
+							if self:processModuleCallback(CALLBACK_ON_MOVE_AWAY, npc, player) then
+								return true
+							end
+						end
 					else
 						self:updateInteraction(npc, player)
 					end

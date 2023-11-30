@@ -1,3 +1,4 @@
+-- /addskill player, skillName/level/exp/magic, number
 local function getSkillId(skillName)
 	if skillName == "club" then
 		return SKILL_CLUB

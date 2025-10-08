@@ -401,3 +401,7 @@ database_backup
 # CLION
 cmake-build-*
 compile_commands.json
+
+vcpkg/
+db-volume/
+myaac/

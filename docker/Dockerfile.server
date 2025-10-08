@@ -1,0 +1,15 @@
+FROM ubuntu:24.04 AS dependencies
+
+RUN apt update
+
+RUN apt install tzdata -y
+RUN apt install ca-certificates -y
+RUN apt install gcc-14 g++-14 -y
+
+WORKDIR /canary
+VOLUME /canary
+
+EXPOSE 7171
+EXPOSE 7172
+
+ENTRYPOINT ["/bin/canary"]

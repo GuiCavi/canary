@@ -2205,6 +2205,11 @@ void Player::sendPing() {
 		setAttackedCreature(nullptr);
 	}
 
+	g_logger().info("noPongTime {}", noPongTime);
+	g_logger().info("shouldForceLogout {}", shouldForceLogout);
+	g_logger().info("timeNow {}", timeNow);
+	g_logger().info("lastPong {}", lastPong);
+
 	if (noPongTime >= 60000 && shouldForceLogout) {
 		if (canLogout() && g_creatureEvents().playerLogout(static_self_cast<Player>())) {
 			g_logger().info("Player {} has been kicked due to ping timeout. (has client: {})", getName(), client != nullptr);

@@ -91,7 +91,7 @@ build_canary() {
 # Function to move the generated executable
 move_executable() {
 	local executable_name="canary"
-	cd ..
+
 	if [ -e "$executable_name" ]; then
 		info "Saving old build"
 		mv ./"$executable_name" ./"$executable_name".old
@@ -108,7 +108,9 @@ main() {
 	setup_canary
 
 	if build_canary; then
-		move_executable
+		# move_executable
+		echo -e "\033[32m[SUCCESS]\033[0m Build completed successfully!"
+		exit 0
 	else
 		echo -e "\033[31m[ERROR]\033[0m Build failed..."
 		exit 1

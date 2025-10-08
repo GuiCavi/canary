@@ -20,6 +20,16 @@
     "zlib",
     "bshoshany-thread-pool",
     "atomic-queue",
+
+    "civetweb",
+    "fmt",
+    "nlohmann-json",
+    "openssl",
+    "utf8-range",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "vcpkg-cmake-get-vars",
+
     {
       "name": "opentelemetry-cpp",
       "default-features": true,

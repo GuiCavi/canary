@@ -1,16 +1,29 @@
 name: otbr
 services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - canary-net
+    ports:
+      - 4444:80
+    depends_on:
+      database:
+        condition: service_healthy
+
   database:
     image: mariadb:latest
     restart: unless-stopped
     env_file:
-      - '.env'
+      - .env
     networks:
       - canary-net
     ports:
-      - '$MYSQL_PORT:3306'
+      - 3307:3306
     volumes:
-      - 'db-volume:/var/lib/mysql'
+      - "./db-volume:/var/lib/mysql"
       - ../schema.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect"]
@@ -18,40 +31,68 @@ services:
       timeout: 5s
       retries: 10
 
-
-  server:
-    # cpuset: "0-4"
+  myaac:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.dev
-      target: prod
+      context: .
+      dockerfile: Dockerfile.myaac
     restart: unless-stopped
-    env_file:
-      - '.env'
-    networks:
-      - canary-net
-    ports:
-      - '$gameProtocolPort:$gameProtocolPort'
-      - '$statusProtocolPort:$statusProtocolPort'
+    depends_on:
+      database:
+        condition: service_healthy
     volumes:
-      - '../:/srv/canary'
-    depends_on:
-      database:
-        condition: service_healthy
-
-  login:
-    image: opentibiabr/login-server:latest
-    restart: unless-stopped
+      - "./myaac:/var/www/html"
+      - "../:/canary/data"
     ports:
-      - '$LOGIN_HTTP_PORT:$LOGIN_HTTP_PORT'
-      - '$LOGIN_GRPC_PORT:$LOGIN_GRPC_PORT'
-    env_file:
-      - '.env'
+      - "8080:80"
+      - 443:443
     networks:
       - canary-net
+
+  # server:
+  #   # cpuset: "0-4"
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile.dev
+  #     target: prod
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ".env"
+  #   networks:
+  #     - canary-net
+  #   volumes:
+  #     - "../:/srv/canary"
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
+
+  tibia_canary_server:
+    container_name: tibia_canary_server
+    image: armagedot/server:latest
+    restart: unless-stopped
     depends_on:
-      database:
-        condition: service_healthy
+      - database
+    volumes:
+      - ../:/canary
+      - ./bin/canary:/bin/canary
+    ports:
+      - 7171:7171
+      - 7172:7172
+    networks:
+      - canary-net
+
+  # login:
+  #   image: opentibiabr/login-server:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "$LOGIN_HTTP_PORT:$LOGIN_HTTP_PORT"
+  #     - "$LOGIN_GRPC_PORT:$LOGIN_GRPC_PORT"
+  #   env_file:
+  #     - ".env"
+  #   networks:
+  #     - canary-net
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
 
 volumes:
   db-volume:
